@@ -15,10 +15,10 @@ class AdminController {
             header('Location: /login');
             exit();
         }
-
+    
         // Récupère tous les utilisateurs
         $users = $this->userModel->getAllUsers();
-
+    
         // Passe les utilisateurs à la vue
         require_once __DIR__ . '/../views/admin/dashboard.php';
     }

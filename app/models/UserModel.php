@@ -9,7 +9,7 @@ class UserModel {
 
     public function createUser($username, $email, $password, $role_id = 2) {
         // Hashage du mot de passe
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         // Préparation de la requête SQL
         $stmt = $this->db->prepare("INSERT INTO users (username, email, password, role_id) VALUES (:username, :email, :password, :role_id)");

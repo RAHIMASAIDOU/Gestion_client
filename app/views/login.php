@@ -26,7 +26,7 @@
                 Se connecter
             </button>
         </form>
-        <p class="mt-4 text-center text-gray-600">Vous n'avez pas de compte ? <a href="index.php?action=register" class="text-blue-500 hover:underline">Inscrivez-vous</a></p>
+        <p class="mt-4 text-center text-gray-600">Vous n'avez pas de compte ? <a href="index.php?action=profile" class="text-blue-500 hover:underline">Inscrivez-vous</a></p>
     </div>
 </body>
 </html>

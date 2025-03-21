@@ -1,9 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../config/Database.php';
-require_once __DIR__ . '/../app/controllers/AuthController.php';
-require_once __DIR__ . '/../app/controllers/AdminController.php';
-require_once __DIR__ . '/../app/controllers/UserController.php';
+require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/app/controllers/AuthController.php';
+require_once __DIR__ . '/app/controllers/AdminController.php';
+require_once __DIR__ . '/app/controllers/UserController.php';
 
 // Connexion à la base de données
 $db = Database::connect();
@@ -14,7 +14,7 @@ $adminController = new AdminController($db);
 $userController = new UserController($db);
 
 // Récupération de l'action à partir de l'URL
-$action = $_GET['action'] ?? 'login';
+$action = isset($_GET['action'] ) ? $_GET['action'] :'bonjour' ;
 
 // Gestion des routes
 switch ($action) {
@@ -33,7 +33,7 @@ switch ($action) {
     // case '/logout':
     //     $authController->logout();
     //     break;
-    // default:
-    //     header('Location: views/auth/login.php');
-    //     exit();
+    default:
+        require 'app/views/register.php';
+        break ;
 }

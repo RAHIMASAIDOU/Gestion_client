@@ -10,14 +10,25 @@ class UserController {
     }
 
     public function profile() {
+        // Démarrer la session
         session_start();
+    
+        // Vérifier si l'utilisateur est connecté
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
+            header('Location: /login'); // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
             exit();
         }
-
+    
+        // Récupérer l'ID de l'utilisateur connecté
         $userId = $_SESSION['user_id'];
-        $user = $this->userModel->getUserByUsername($_SESSION['username']);
+    
+        // Récupérer les informations de l'utilisateur depuis la base de données
+        $stmt = $this->db->prepare("SELECT username, email, status, created_at FROM users WHERE id = :id");
+        $stmt->bindParam(':id', $userId);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        // Passer les données à la vue
         require_once __DIR__ . '/../views/user/profile.php';
     }
 }

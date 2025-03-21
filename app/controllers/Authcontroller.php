@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__ . '/../models/UserModel.php';
+require_once __DIR__ . '/../../config/database.php';
+
 
 class AuthController {
     private $userModel;
@@ -16,7 +18,7 @@ class AuthController {
             $password = $_POST['password'];
 
             if ($this->userModel->createUser($username, $email, $password)) {
-                header('Location: public/index.php?action=login');
+                header('Location: /Gestion_client/app/views/login.php');
                 exit();
             } else {
                 echo "Erreur lors de l'inscription.";
@@ -24,12 +26,12 @@ class AuthController {
 
             if(!empty($_POST['username']) && !empty($_POST['password'])) {
                 echo 'Tous les champs sont remplis';
-            } else {
+            } else { 
                 echo "veuillez entrer tous les champs";
             }
 
         }
-        require '../app/views/auth/register.php';
+        require '/Gestion_client/app/views/register.php';
     }
 
     public function login() {
@@ -50,13 +52,13 @@ class AuthController {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['role'] = $user['role_name'];
 
-                header('Location: public/index.php?action=dashboard');
+                header('Location: /Gestion_client/app/views/profile.php');
                 exit();
             } else {
                 echo "Identifiants incorrects.";
             }
         }    
-        require '../app/views/auth/login.php';
+        require '/Gestion_client/app/views/login.php';
     }
 
     public function logout() {

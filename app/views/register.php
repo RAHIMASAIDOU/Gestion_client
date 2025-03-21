@@ -27,7 +27,7 @@
                     S'inscrire
                 </button>
             </form>
-            <p class="mt-4 text-center text-gray-600">Vous avez déjà un compte ? <a href="/profile" class="text-blue-500 hover:underline">Connectez-vous</a></p>
+            <p class="mt-4 text-center text-gray-600">Vous avez déjà un compte ? <a href="/Gestion_client/app/views/login.php" class="text-blue-500 hover:underline">Connectez-vous</a></p>
         </div>
     </div>
 </body>
