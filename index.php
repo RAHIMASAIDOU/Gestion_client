@@ -20,7 +20,7 @@ $action = isset($_GET['action'] ) ? $_GET['action'] :'bonjour' ;
 switch ($action) {
     case 'register':
         $authController->register();
-        break;
+        break; 
     case 'login':
         $authController->login();
         break;
