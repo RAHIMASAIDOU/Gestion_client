@@ -1,6 +1,9 @@
 <?php
+session_start();
 
 require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/app/models/UserModel.php';
+require_once __DIR__ . '/app/models/RoleModel.php';
 require_once __DIR__ . '/app/controllers/AuthController.php';
 require_once __DIR__ . '/app/controllers/AdminController.php';
 require_once __DIR__ . '/app/controllers/UserController.php';
@@ -24,6 +27,12 @@ switch ($action) {
     case 'login':
         $authController->login();
         break;
+    case 'addUser':
+        $adminController->addUser();
+        break;
+    case 'deleteUser':
+        $adminController->deleteUser();
+        break;        
     case 'dashboard':
         $adminController->dashboard();
         break;
@@ -34,6 +43,6 @@ switch ($action) {
     //     $authController->logout();
     //     break;
     default:
-        require 'app/views/register.php';
+        require 'app/views/login.php';
         break ;
 }

@@ -2,63 +2,103 @@
 
 require_once __DIR__ . '/../models/UserModel.php';
 require_once __DIR__ . '/../../config/database.php';
-
+require_once __DIR__ . '/UserController.php';
+require_once __DIR__ . '/../models/RoleModel.php';
 
 class AuthController {
     private $userModel;
+    private $roleModel;
 
     public function __construct($db) {
-        $this->userModel = new UserModel($db);
+        $this->userModel = new UserModel($db); // Injecter UserModel dans AuthController
+        $this->roleModel = new RoleModel($db); // Injecter RoleModel dans AuthController
     }
 
     public function register() {
+        // Récupérer les rôles
+        $roles = $this->roleModel->getAllRoles();
+    
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'];
             $email = $_POST['email'];
             $password = $_POST['password'];
-
-            if ($this->userModel->createUser($username, $email, $password)) {
-                header('Location: /Gestion_client/app/views/login.php');
+            $role_id = $_POST['role_id'];
+    
+            // Vérifier que tous les champs sont remplis
+            if (empty($username) || empty($email) || empty($password) || empty($role_id)) {
+                $errorMessage = "Veuillez remplir tous les champs.";
+                require __DIR__ . '/../views/register.php';
+                return;
+            }
+    
+            // Vérifier si le nom d'utilisateur existe déjà
+            if ($this->userModel->usernameExists($username)) {
+                $errorMessage = "Ce nom d'utilisateur est déjà pris. Veuillez en choisir un autre.";
+                require __DIR__ . '/../views/register.php';
+                return;
+            }
+    
+            // Créer l'utilisateur
+            if ($this->userModel->createUser($username, $email, $password, $role_id)) {
+                // Récupérer l'utilisateur nouvellement créé
+                $user = $this->userModel->getUserByUsername($username);
+    
+                // Démarrer la session et connecter l'utilisateur
+               
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['role'] = $user['role_name'];
+    
+                // Rediriger en fonction du rôle
+                if ($_SESSION['role'] === 'admin') { // Assurez-vous que la casse correspond
+                    header('Location: index.php?action=dashboard');
+                } else {
+                    header('Location: index.php?action=profile');
+                }
                 exit();
             } else {
-                echo "Erreur lors de l'inscription.";
+                $errorMessage = "Erreur lors de l'inscription.";
+                require __DIR__ . '/../views/register.php';
             }
-
-            if(!empty($_POST['username']) && !empty($_POST['password'])) {
-                echo 'Tous les champs sont remplis';
-            } else { 
-                echo "veuillez entrer tous les champs";
-            }
-
         }
-        require '/Gestion_client/app/views/register.php';
+            require __DIR__ . '/../views/register.php';
     }
 
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST["username"];
             $password = $_POST["password"];
-
-            if(!empty($_POST['username']) && !empty($_POST['password'])) {
-                echo 'Tous les champs sont remplis';
-            } else {
-                echo "veuillez entrer tous les champs";
+    
+            // Vérifier que tous les champs sont remplis
+            if (empty($username) || empty($password)) {
+                echo "Veuillez remplir tous les champs.";
+                require __DIR__ . '/../views/login.php';
+                return;
             }
-
+    
+            // Récupérer l'utilisateur par son nom d'utilisateur
             $user = $this->userModel->getUserByUsername($username);
-
+    
+            // Vérifier les identifiants
             if ($user && password_verify($password, $user['password'])) {
-                session_start();
+                // Démarrer la session et enregistrer les informations de l'utilisateur
+              
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['role'] = $user['role_name'];
-
-                header('Location: /Gestion_client/app/views/profile.php');
+    
+                // Rediriger en fonction du rôle
+                if ($_SESSION['role'] === 'admin') { // Assurez-vous que la casse correspond
+                    header('Location: index.php?action=dashboard');
+                } else {
+                    header('Location: index.php?action=profile');
+                }
                 exit();
             } else {
                 echo "Identifiants incorrects.";
             }
-        }    
-        require '/Gestion_client/app/views/login.php';
+        }
+    
+        // Afficher le formulaire de connexion
+        require __DIR__ . '/../views/login.php';
     }
 
     public function logout() {
