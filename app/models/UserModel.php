@@ -60,9 +60,9 @@ class UserModel {
         return $stmt->fetch(PDO::FETCH_ASSOC) !== false;
     }
 
-     // Récupérer le nombre de clients
-     public function getClientCount() {
-        $query = "SELECT COUNT(*) as count FROM users WHERE role = 'client'";
+    // Récupérer le nombre de clients
+    public function getClientCount() {
+        $query = "SELECT COUNT(*) as count FROM users WHERE role_id = (SELECT id FROM role WHERE name = 'client')";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -71,11 +71,35 @@ class UserModel {
 
     // Récupérer le nombre d'administrateurs
     public function getAdminCount() {
-        $query = "SELECT COUNT(*) as count FROM users WHERE role = 'admin'";
+        $query = "SELECT COUNT(*) as count FROM users WHERE role_id = (SELECT id FROM role WHERE name = 'admin')";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['count'];
+    }
+
+    public function updateUser($userId, $username, $email, $password = null) {
+        // Préparer la requête SQL
+        if ($password) {
+            // Si un nouveau mot de passe est fourni, le hasher et l'inclure dans la mise à jour
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $query = "UPDATE users SET username = :username, email = :email, password = :password WHERE id = :userId";
+        } else {
+            // Sinon, ne pas modifier le mot de passe
+            $query = "UPDATE users SET username = :username, email = :email WHERE id = :userId";
+        }
+    
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':userId', $userId);
+    
+        if ($password) {
+            $stmt->bindParam(':password', $hashedPassword);
+        }
+    
+        // Exécuter la requête
+        return $stmt->execute();
     }
 }
 ?>

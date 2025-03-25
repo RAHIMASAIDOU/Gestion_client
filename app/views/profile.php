@@ -1,3 +1,9 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -5,56 +11,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil Utilisateur</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
     <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <div class="bg-blue-800 text-white w-64 p-6">
-            <h2 class="text-2xl font-bold mb-8">Dashboard</h2>
-            <ul>
-                <li class="mb-4">
-                    <a href="/dashboard" class="flex items-center hover:bg-blue-700 p-2 rounded">
-                        <span>Profil</span>
-                    </a>
-                </li>
-                <li class="mb-4">
-                    <a href="/logout" class="flex items-center hover:bg-blue-700 p-2 rounded">
-                        <span>Déconnexion</span>
-                    </a>
-                </li>
-            </ul>
+        <!-- Sidebar simplifiée -->
+        <div class="bg-blue-600 bg-primary-800 text-white w-20 md:w-64 p-4">
+            <div class="text-center md:text-left mb-8">
+                <i class="fas fa-user text-xl md:mr-2"></i>
+                <span class="hidden md:inline text-xl font-bold">Profil</span>
+            </div>
+            
+            <nav class="space-y-3">
+                <a href="index.php?action=accueil" class="block p-2 rounded hover:bg-blue-500 text-center md:text-left">
+                    <i class="fas fa-home md:mr-2"></i>
+                    <span class="hidden md:inline">Accueil</span>
+                </a>
+                <a href="#" class="block p-2 rounded bg-blue-500 text-center md:text-left">
+                    <i class="fas fa-user md:mr-2"></i>
+                    <span class="hidden md:inline">Profil</span>
+                </a>
+                <a href="#" class="block p-2 rounded bg-blue-500 text-center md:text-left">
+                    <i class="fas fa-user md:mr-2"></i>
+                    <span class="hidden md:inline">Historique</span>
+                </a>
+                <a href="index.php?action=logout" class="block p-2 rounded hover:bg-blue-500 text-center md:text-left">
+                    <i class="fas fa-sign-out-alt md:mr-2"></i>
+                    <span class="hidden md:inline">Déconnexion</span>
+                </a>
+            </nav>
         </div>
 
         <!-- Contenu principal -->
-        <div class="flex-1 p-8">
-            <h1 class="text-3xl font-bold mb-8">Profil Utilisateur</h1>
-            <div class="bg-white rounded-lg shadow p-6">
-                <!-- Informations de l'utilisateur -->
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-gray-700 font-medium">Nom d'utilisateur</label>
-                        <p class="mt-1 text-gray-900"><?= htmlspecialchars($user['username']); ?></p>
+        <div class="flex-1 p-6">
+            <h1 class="text-2xl font-bold mb-6">Mon Profil</h1>
+            
+            <!-- Carte profil -->
+            <div class="bg-white rounded-lg shadow p-6 max-w-2xl">
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6">
+                    <div class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-3xl font-bold">
+                        <?= strtoupper(substr($user['username'], 0, 1)) ?>
                     </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium">Email</label>
-                        <p class="mt-1 text-gray-900"><?= htmlspecialchars($user['email']); ?></p>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium">Statut</label>
-                        <p class="mt-1 text-gray-900">
-                            <?= htmlspecialchars($user['status'] === 'active' ? 'Actif' : 'Inactif'); ?>
-                        </p>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium">Date d'inscription</label>
-                        <p class="mt-1 text-gray-900"><?= htmlspecialchars($user['created_at']); ?></p>
+                    
+                    <div class="text-center md:text-left">
+                        <h2 class="text-xl font-bold"><?= htmlspecialchars($user['username']) ?></h2>
+                        <p class="text-gray-600"><?= htmlspecialchars($user['email']) ?></p>
+                        <span class="inline-block mt-2 px-3 py-1 text-xs font-semibold rounded-full 
+                            <?= $user['status'] === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' ?>">
+                            <?= htmlspecialchars($user['status'] === 'active' ? 'Actif' : 'Inactif') ?>
+                        </span>
                     </div>
                 </div>
-  
-                <!-- Bouton pour modifier le profil -->
-                <div class="mt-6">
-                    <a href="/edit-profile" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
-                        Modifier le profil
+                
+                <hr class="my-4">
+                
+                <!-- Informations -->
+                <div class="space-y-4">
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Date d'inscription</span>
+                        <span class="font-medium"><?= htmlspecialchars(date('d/m/Y', strtotime($user['created_at']))) ?></span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Dernière connexion</span>
+                        <span class="font-medium">Aujourd'hui</span>
+                    </div>
+                </div>
+                
+                <!-- Boutons -->
+                <div class="mt-8 flex flex-col sm:flex-row gap-3">
+                    <a href="index.php?action=modifier-profil" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-center transition">
+                        <i class="fas fa-edit mr-2"></i>Modifier
                     </a>
                 </div>
             </div>

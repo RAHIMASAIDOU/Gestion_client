@@ -10,9 +10,7 @@ class UserController {
     }
 
     public function profile() {
-        // Démarrer la session
         
-
         // Vérifier si l'utilisateur est connecté
         if (!isset($_SESSION['user_id'])) {
             header('Location: index.php?action=login'); // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
@@ -27,5 +25,53 @@ class UserController {
 
         // Passer les données à la vue
         require_once __DIR__ . '/../views/profile.php';
+    }
+
+    public function modifierProfil() {
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        // Vérifier si l'utilisateur est connecté
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit();
+        }
+    
+        // Récupérer l'ID de l'utilisateur connecté
+        $userId = $_SESSION['user_id'];
+    
+        // Récupérer les informations de l'utilisateur
+        $user = $this->userModel->getUserById($userId);
+    
+        // Afficher le formulaire de modification
+        require_once __DIR__ . '/../views/modifier-profil.php';
+    }
+
+    public function updateProfile() {
+        // Vérifier si l'utilisateur est connecté
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit();
+        }
+    
+        // Récupérer l'ID de l'utilisateur connecté
+        $userId = $_SESSION['user_id'];
+    
+        // Récupérer les données du formulaire
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+    
+        // Mettre à jour les informations de l'utilisateur
+        if ($this->userModel->updateUser($userId, $username, $email, $password)) {
+            $_SESSION['success'] = "Profil mis à jour avec succès.";
+        } else {
+            $_SESSION['error'] = "Erreur lors de la mise à jour du profil.";
+        }
+    
+        // Rediriger vers la page de profil
+        header('Location: index.php?action=profile');
+        exit();
     }
 }

@@ -1,6 +1,9 @@
 <?php
 
 require_once __DIR__ . '/../models/UserModel.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/UserController.php';
+
 
 class AdminController {
     private $userModel;
@@ -20,6 +23,11 @@ class AdminController {
 
         // Récupérer tous les utilisateurs
         $users = $this->userModel->getAllUsers();
+
+        // Récupérer le nombre de clients et d'administrateurs
+        $clientCount = $this->userModel->getClientCount();
+        $adminCount = $this->userModel->getAdminCount();
+
 
         // Passer les utilisateurs à la vue
         require __DIR__ . '/../views/dashboard.php';
@@ -89,6 +97,6 @@ class AdminController {
         $adminCount = $this->userModel->getAdminCount();
 
         // Passer les données à la vue
-        require_once __DIR__ . '/../views/dashboard.php';
+        require_once __DIR__ . '/../../views/dashboard.php';
     }
 }

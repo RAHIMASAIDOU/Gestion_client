@@ -36,7 +36,7 @@ class AuthController {
                 $errorMessage = "Ce nom d'utilisateur est déjà pris. Veuillez en choisir un autre.";
                 require __DIR__ . '/../views/register.php';
                 return;
-            }
+            } 
     
             // Créer l'utilisateur
             if ($this->userModel->createUser($username, $email, $password, $role_id)) {
@@ -80,11 +80,19 @@ class AuthController {
     
             // Vérifier les identifiants
             if ($user && password_verify($password, $user['password'])) {
+
                 // Démarrer la session et enregistrer les informations de l'utilisateur
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
               
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['role'] = $user['role_name'];
-    
+
+
+                // Enregistrer la connexion dans sessions
+                Session::saveLogin($user["id"]);
+
                 // Rediriger en fonction du rôle
                 if ($_SESSION['role'] === 'admin') { // Assurez-vous que la casse correspond
                     header('Location: index.php?action=dashboard');
@@ -102,9 +110,21 @@ class AuthController {
     }
 
     public function logout() {
-        session_start();
+        // Démarrer la session si ce n'est pas déjà fait
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (isset($_SESSION["user_id"])) {
+            // Enregistrer la déconnexion
+            Session::saveLogout($_SESSION["user_id"]);
+        }
+    
+        // Détruire la session
         session_destroy();
-        header('Location: /login');
+    
+        // Rediriger vers la page d'accueil
+        header('Location: index.php?action=login');
         exit();
     }
 }

@@ -14,7 +14,7 @@ $db = Database::connect();
 // Instanciation des contrôleurs
 $authController = new AuthController($db);
 $adminController = new AdminController($db);
-$userController = new UserController($db);
+$userController = new UserController($db); 
 
 // Récupération de l'action à partir de l'URL
 $action = isset($_GET['action'] ) ? $_GET['action'] :'bonjour' ;
@@ -39,9 +39,14 @@ switch ($action) {
     case 'profile':
         $userController->profile();
         break;
-    // case '/logout':
-    //     $authController->logout();
-    //     break;
+    case 'modifier-profil':
+        $userController->modifierProfil(); 
+        break;   
+    case 'update-profile':
+        $userController->updateProfile();      
+    case '/logout':
+        $authController->logout();
+        break;
     default:
         require 'app/views/login.php';
         break ;

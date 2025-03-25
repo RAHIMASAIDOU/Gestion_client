@@ -2,8 +2,7 @@
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
         <?= htmlspecialchars($errorMessage) ?>
     </div>
-<?php endif; 
-?>
+<?php endif; ?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -33,7 +32,7 @@
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium">Rôle</label>
                     <select name="role_id" class="w-full px-4 py-2 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                        <?php foreach ($role as $role) : ?>
+                        <?php foreach ($roles as $role) : ?>
                             <option value="<?= htmlspecialchars($role['id']) ?>"><?= htmlspecialchars($role['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
@@ -42,7 +41,7 @@
                     S'inscrire
                 </button>
             </form>
-            <p class="mt-4 text-center text-gray-600">Vous avez déjà un compte ? <a href="/Gestion_client/app/views/profile.php" class="text-blue-500 hover:underline">Connectez-vous</a></p>
+            <p class="mt-4 text-center text-gray-600">Vous avez déjà un compte ? <a href="index.php?action=login" class="text-blue-500 hover:underline">Connectez-vous</a></p>
         </div>
     </div>
 </body>
