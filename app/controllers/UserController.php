@@ -4,6 +4,7 @@ require_once __DIR__ . '/../models/UserModel.php';
 
 class UserController {
     private $userModel;
+    private $db;
 
     public function __construct($db) {
         $this->userModel = new UserModel($db); // $db est injecté dans UserModel
@@ -73,5 +74,21 @@ class UserController {
         // Rediriger vers la page de profil
         header('Location: index.php?action=profile');
         exit();
+    }
+
+    public function historique() {
+        // Vérifie que l'utilisateur est bien connecté
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?action=login");
+            exit;
+        }
+
+        // Récupérer l'historique des connexions
+        require_once __DIR__ . '/../models/Session.php';
+        $session = new Session($this->db);
+        $sessions = $session->getUserSessions($_SESSION['user_id']);  
+        
+        // Afficher l'historique
+        require __DIR__ . '/../views/historique.php';
     }
 }

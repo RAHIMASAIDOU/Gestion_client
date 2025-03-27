@@ -4,6 +4,7 @@ session_start();
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/app/models/UserModel.php';
 require_once __DIR__ . '/app/models/RoleModel.php';
+require_once __DIR__ . '/app/models/session.php';
 require_once __DIR__ . '/app/controllers/AuthController.php';
 require_once __DIR__ . '/app/controllers/AdminController.php';
 require_once __DIR__ . '/app/controllers/UserController.php';
@@ -43,7 +44,75 @@ switch ($action) {
         $userController->modifierProfil(); 
         break;   
     case 'update-profile':
-        $userController->updateProfile();      
+        $userController->updateProfile(); 
+        break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        case 'historique': 
+        $userController->historique();
+        break;         
     case '/logout':
         $authController->logout();
         break;

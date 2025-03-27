@@ -4,6 +4,8 @@ require_once __DIR__ . '/../models/UserModel.php';
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/UserController.php';
 require_once __DIR__ . '/../models/RoleModel.php';
+require_once __DIR__ . '/../models/Session.php';
+
 
 class AuthController {
     private $userModel;
@@ -96,9 +98,9 @@ class AuthController {
                 // Rediriger en fonction du rôle
                 if ($_SESSION['role'] === 'admin') { // Assurez-vous que la casse correspond
                     header('Location: index.php?action=dashboard');
-                } else {
+                } else { 
                     header('Location: index.php?action=profile');
-                }
+                } 
                 exit();
             } else {
                 echo "Identifiants incorrects.";
@@ -110,21 +112,12 @@ class AuthController {
     }
 
     public function logout() {
-        // Démarrer la session si ce n'est pas déjà fait
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        if (isset($_SESSION["user_id"])) {
-            // Enregistrer la déconnexion
-            Session::saveLogout($_SESSION["user_id"]);
-        }
-    
-        // Détruire la session
-        session_destroy();
-    
-        // Rediriger vers la page d'accueil
-        header('Location: index.php?action=login');
-        exit();
+        // Détruire toutes les données de la session
+        session_unset();  // Supprime toutes les variables de session
+        session_destroy(); // Détruit la session
+        
+        // Rediriger l'utilisateur vers la page de connexion
+        header("Location: index.php?action=login"); // Redirection vers la page de connexion
+        exit;
     }
 }

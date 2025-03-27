@@ -31,7 +31,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     <i class="fas fa-user md:mr-2"></i>
                     <span class="hidden md:inline">Profil</span>
                 </a>
-                <a href="#" class="block p-2 rounded bg-blue-500 text-center md:text-left">
+                <a href="index.php?action=historique" class="block p-2 rounded bg-blue-500 text-center md:text-left">
                     <i class="fas fa-user md:mr-2"></i>
                     <span class="hidden md:inline">Historique</span>
                 </a>
